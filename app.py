@@ -1,39 +1,31 @@
 from pathlib import Path
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
+from models import Customer, Product
 from db import db
-import csv
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///purchase.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///myorder.db"
 app.instance_path = Path("data").resolve()
 
 db.init_app(app)
 
 @app.route("/")
 def home():
-    return render_template("index.html")
-
+    return redirect(url_for('customer_list'))
 
 @app.route("/customers")
-def customer_list():
-    with open("./data/customers.csv") as file:
-        reader = csv.DictReader(file)
-        my_data = []
-        for row in reader:
-            my_data.append(row)
-
-    return render_template("customers.html", customers = my_data)
+def customer_list(): 
+    statement = db.select(Customer).order_by(Customer.name)
+    records = db.session.execute(statement)
+    results = records.scalars()
+    return render_template("customers.html", customers = results)
 
 @app.route("/products")
 def product_list():
-    with open("./data/products.csv") as file:
-        reader = csv.DictReader(file)
-        my_data = []
-        for row in reader:
-            my_data.append(row)
-
-    return render_template("products.html", products = my_data)
-
+    statement = db.select(Product).order_by(Product.name)
+    records = db.session.execute(statement)
+    results = records.scalars()
+    return render_template("products.html", products = results)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8888)

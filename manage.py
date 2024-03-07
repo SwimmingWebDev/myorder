@@ -38,6 +38,5 @@ def main():
         create_all_tables()
         import_data_from_CSV()
         
-
 if __name__ == "__main__":
     main()

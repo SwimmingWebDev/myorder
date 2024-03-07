@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h1>Products</h1>
+{% for product in products %}
+<p>
+    <span>{{ product.name }}</span>
+    <span>{{ product.phone }}</span>
+</p>
+{% endfor %}
+{% endblock %}

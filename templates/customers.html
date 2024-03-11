@@ -1,24 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Customer List</h1>
-<table>
-    <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Phone</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for customer in customers %}
-        <tr>
-            <th scope="row">{{ customer.name }}</th>
-            <td>{{ customer.phone }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+<div class="content">
+    <h1>Customer List</h1>
+    <form action="/api/customers" method="POST">
+        name<input type="text" name="name" placeholder="Enter a name" id="customer_name">
+        phone number<input type="text" name="phone" placeholder="Enter a phone number" id="customer_phone">
+        <input type="submit" value="Add New Customer">
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.name }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>
+                    <a href="/api/customers/{{customer.id}}">Edit</a>
+                    <a href="/api/customers/delete/{{customer.id}}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
 
-</table>
-
-
+    </table>
+</div>
 {% endblock %}

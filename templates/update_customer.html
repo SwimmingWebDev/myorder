@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Update Customer{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Update Customer</h1>
+    <table class="task_table">
+        <div class="form">
+            <form action="/api/customers/update/{{customer.id}}" method="POST">
+                name<input type="text" name="name" value={{customer.name}} id="customer_name">
+                phone number<input type="text" name="phone" value={{customer.phone}} id="customer_phone">
+                <input type="submit" value="Update New Customer">
+            </form>
+        </div>
+</div>
+{% endblock %}

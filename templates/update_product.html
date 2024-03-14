@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Update Product{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Update Product</h1>
+    <table class="task_table">
+        <div class="form">
+            <form action="/product/{{product.id}}" method="POST">
+                <input type="hidden" name="id" value="{{product.id}}">
+                name<input type="text" name="name" value="{{product.name}}"><br>
+                price<input type="text" name="price" value="{{product.price}}"><br>
+                quantity<input type="text" name="quantity" value="{{product.quantity}}"><br><br>
+                <input type="submit" value="Update Product">
+            </form>
+        </div>
+</div>
+{% endblock %}

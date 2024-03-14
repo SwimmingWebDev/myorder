@@ -3,13 +3,15 @@
 
 {% block content %}
 <div class="content">
-    <h1>Update Customer</h1>
+    <h1>Update Information</h1>
     <table class="task_table">
         <div class="form">
-            <form action="/api/customers/update/{{customer.id}}" method="POST">
-                name<input type="text" name="name" value={{customer.name}} id="customer_name">
-                phone number<input type="text" name="phone" value={{customer.phone}} id="customer_phone">
-                <input type="submit" value="Update New Customer">
+            <form action="/customer/update/{{customer.id}}" method="POST">
+                <input type="hidden" name="id" value="{{customer.id}}">
+                name<input type="text" name="name" value="{{customer.name}}"><br>
+                phone number<input type="text" name="phone" value="{{customer.phone}}"><br>
+                balance<input type="text" name="balance" value="{{customer.balance}}"><br><br>
+                <input type="submit" value="Update Customer">
             </form>
         </div>
 </div>

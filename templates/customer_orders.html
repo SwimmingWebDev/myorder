@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>My Order List</h1>
+<div class="container">
+
+    <table>
+        <thead>
+            <tr>
+                <th scope="col" width="90">Order_ID</th>
+                <th scope="col" width="90">Date_Ordered</th>
+                <th scope="col" width="70">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.date_ordered.date() }}</td>
+
+                <td>
+                    <a href="/order/{{order.id}}" class="btn">Edit</a>
+                    <a href="/order/{{order.id}}" class="btn"
+                        onclick="return confirm('Are you sure to delete?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+{% endblock %}

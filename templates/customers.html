@@ -1,28 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="content">
-    <h1>Customer List</h1>
-    <form action="/api/customers" method="POST">
-        name<input type="text" name="name" placeholder="Enter a name" id="customer_name">
-        phone number<input type="text" name="phone" placeholder="Enter a phone number" id="customer_phone">
-        <input type="submit" value="Add New Customer">
+<h1>Customers List</h1>
+<div class="container">
+    <form action="/customers" method="POST">
+        name<input type="text" name="name" placeholder="Enter name">
+        phone<input type="text" name="phone" placeholder="Enter phone number">
+        <input type="submit" value="Add New Customer" class="button">
     </form>
     <table>
         <thead>
             <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Phone</th>
+                <th scope="col" width="90">Name</th>
+                <th scope="col" width="90">Phone</th>
+                <th scope="col" width="40">Balance</th>
+                <th scope="col" width="70">Options</th>
             </tr>
         </thead>
         <tbody>
             {% for customer in customers %}
             <tr>
-                <td>{{ customer.name }}</td>
+                <td><a href="/customer/{{customer.id}}">{{ customer.name }}</a></td>
                 <td>{{ customer.phone }}</td>
+                <td>{{ customer.balance }}</td>
                 <td>
-                    <a href="/api/customers/{{customer.id}}">Edit</a>
-                    <a href="/api/customers/delete/{{customer.id}}">Delete</a>
+                    <a href="/customer/update/{{customer.id}}" class="btn">Edit</a>
+                    <a href="/customer/delete/{{customer.id}}" class="btn"
+                        onclick="return confirm('Are you sure to delete?')">Delete</a>
                 </td>
             </tr>
             {% endfor %}

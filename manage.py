@@ -68,6 +68,11 @@ def main():
         drop_all_tables()
         create_all_tables()
         import_data_from_CSV()
+        randomize()
+        randomize()
+        randomize()
+        randomize()
+        randomize()
         
 if __name__ == "__main__":
     main()

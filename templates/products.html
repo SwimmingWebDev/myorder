@@ -1,11 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Products</h1>
-{% for product in products %}
-<p>
-    <span>{{ product.name }}</span>
-    <span>{{ product.price }}</span>
-</p>
-{% endfor %}
+
+<div class="container">
+    <h1>Products List</h1>
+    <form action="/products" method="POST">
+        name<input type="text" name="name" placeholder="Enter name">
+        price<input type="text" name="price" placeholder="Enter price">
+        <input type="submit" value="Add New Product" class="button">
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th scope="col" width="90">Name</th>
+                <th scope="col" width="90">Price</th>
+                <th scope="col" width="40">Quantity</th>
+                <th scope="col" width="70">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <a href="/product/{{product.id}}" class="btn">Edit</a>
+                    <a href="/product/delete/{{product.id}}" class="btn"
+                        onclick="return confirm('Are you sure to delete?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
 {% endblock %}

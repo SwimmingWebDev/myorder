@@ -16,7 +16,7 @@
             {% for order in orders %}
             <tr>
                 <td>{{ order.id }}</td>
-                <td>{{ order.date_ordered.date() }}</td>
+                <td>{{ order.date_created }}</td>
 
                 <td>
                     <a href="/order/{{order.id}}" class="btn">Edit</a>

@@ -2,11 +2,28 @@
 
 {% block content %}
 <h1>Orders List</h1>
-{% for order in orders %}
-<p>
-    <span>{{ order.id }}</span>
-    <span>{{ order.customer_id }}</span>
-    <span>{{ order.total }}</span>
-</p>
-{% endfor %}
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col" width="90">Order_ID</th>
+            <th scope="col" width="90">Customer_ID</th>
+            <th scope="col" width="90">Customer_Name</th>
+            <th scope="col" width="90">Date_created</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td><a href="/order/{{order.id}}">{{ order.id }}</a></td>
+            <td>{{ order.customer_id }}</td>
+            <td>{{ order.customer.name }}</td>
+            <td>{{ order.date_created }}</td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
 {% endblock %}

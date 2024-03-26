@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Float, DateTime, Numeric, ForeignKey, Integer, String
 from sqlalchemy.orm import mapped_column, relationship
 from db import db
-from datetime import datetime
+from sqlalchemy.sql import func
 
 class Customer(db.Model):
     id = mapped_column(Integer, primary_key=True)
@@ -22,8 +22,8 @@ class Customer(db.Model):
 class Product(db.Model):
     id = mapped_column(Integer, primary_key=True)
     name = mapped_column(String(50), nullable=False, unique=True)
-    price = mapped_column(Integer, nullable=False)
-    quantity = mapped_column(Integer, nullable=False, default=0)
+    price = mapped_column(Numeric, nullable=False)
+    available = mapped_column(Integer, nullable=False, default=0)
     product_items = relationship("ProductOrder", back_populates="product")
 
     def to_json(self):
@@ -32,42 +32,43 @@ class Product(db.Model):
             "id":self.id,
             "name":self.name,
             "price": self.price,
-            "quantity": self.quantity,
+            "available": self.available,
         }
 
 class Order(db.Model):
     id = mapped_column(Integer, primary_key=True)
     customer_id = mapped_column(Integer, ForeignKey(Customer.id), nullable=False)
     customer = relationship("Customer", back_populates="orders")
-    total = mapped_column(Numeric, nullable=True)
-    items = relationship("ProductOrder", back_populates="order")
-    date_ordered = mapped_column(DateTime, default=datetime.utcnow)
-
-    def to_json(self):
-        return {
-            "id":self.id,
-            "customer_id":self.customer_id,
-            "items":self.items,
-            "date_ordered":self.date_ordered
-        }
+    total = mapped_column(Numeric)
+    items = relationship("ProductOrder", back_populates="order", cascade="all, delete-orphan")
+    date_created = mapped_column(DateTime(timezone=True), default=func.now())
+    processed = mapped_column(DateTime(timezone=True), nullable=True)
     
     def calculate_total(self, list):
         return {
             round(sum(list), 2)
         }
+    
+    # def product_to_dict(self, name, quantity):
+    #     items = []
+    #     item = {
+    #         "name": name,
+    #         "quantity":quantity
+    #     }
+    #     return items.push(item)
+        
+    # def process(self, strategy="adjust"):
+    #     if (self.processed is not None) and (self.customer.balance > 0):
+    #         if self.order.quantity > self.order.product.available:
+    #             strategy="adjust"
+
+
+
 
 class ProductOrder(db.Model):
     id = mapped_column(Integer, primary_key=True)
-    order_id = mapped_column(Integer, ForeignKey(Order.id), nullable=False)
+    order_id = mapped_column(Integer, ForeignKey(Order.id))
     order = relationship("Order", back_populates="items")
     product_id = mapped_column(Integer, ForeignKey(Product.id), nullable=False)
     product = relationship("Product", back_populates="product_items")
     quantity = mapped_column(Integer, nullable=False, default=0)
-
-    def to_json(self):
-        return {
-            "id":self.id,
-            "order_id":self.order_id,
-            "product_id": self.product_id,
-            "quantity": self.quantity,
-        }

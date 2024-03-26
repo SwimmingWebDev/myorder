@@ -109,3 +109,50 @@ input[type="submit"]:hover {
   background-color: var(--font-color);
   color: var(--bg-variant);
 }
+
+/* exception */
+
+.make_order {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.make_order label {
+  margin-top: 5px;
+}
+.make_order .button {
+  margin-top: 5px;
+}
+
+.custom-select {
+  font-family: "Roboto Condensed", sans-serif;
+  background-color: var(--bg-variant);
+  color: var(--font-color);
+}
+
+.custom-select select {
+  display: none; /*hide original SELECT element: */
+}
+
+.order_options {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.order_status {
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 500;
+  font-size: smaller;
+  background-color: var(--bg-variant);
+  color: var(--font-color);
+  padding: 3px 6px;
+  text-decoration: none;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.customer_name {
+  margin: 0;
+}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Make Order</h1>
+<div class="container">
+    <form action="/makeorder" method="POST" class="make_order">
+        <label for="customer">Step1. Choose a Customer</label>
+        <select name="customer" class="custom-select">
+            {% for customer in customers %}
+            <option name="customer" value="{{customer.id}}">{{customer.name}}</option>
+            {% endfor %}
+        </select>
+        <label for="product">Step2. Choose Products</label>
+        <select name="item" class="custom-select">
+            {% for product in products %}
+            <option name="product" value="{{product.id}}">{{product.name}}</option>
+            {% endfor %}
+        </select>
+        <label for="product">Step3. Choose Quantity</label>
+        <input type="text" name="quantity" placeholder="Enter Quantity">
+
+        <input type="submit" value="Add New Order" class="button">
+    </form>
+</div>
+{% endblock %}

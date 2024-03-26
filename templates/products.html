@@ -15,7 +15,7 @@
             <tr>
                 <th scope="col" width="90">Name</th>
                 <th scope="col" width="90">Price</th>
-                <th scope="col" width="40">Quantity</th>
+                <th scope="col" width="40">Available</th>
                 <th scope="col" width="70">Options</th>
             </tr>
         </thead>
@@ -24,7 +24,7 @@
             <tr>
                 <td>{{ product.name }}</td>
                 <td>{{ product.price }}</td>
-                <td>{{ product.quantity }}</td>
+                <td>{{ product.available }}</td>
                 <td>
                     <a href="/product/{{product.id}}" class="btn">Edit</a>
                     <a href="/product/delete/{{product.id}}" class="btn"

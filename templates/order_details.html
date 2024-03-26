@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>#{{order_id}} Order Details</h1>
+<div class="order_options">
+    <p>Order Status:<span class="order_status">Adjust</span></p><span>|</span><a href="/order/{{order_id}}/delete"
+        class="btn" onclick="return confirm('Are you sure to delete?')">Delete
+        Order</a>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>Product_Name</th>
+            <th>Price</th>
+            <th>Quantity_ordered</th>
+            <th>Available</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        {% if loop.index == 1 %}
+        <p class="customer_name">Customer Name: {{order.order.customer.name}}</p>
+        {% endif %}
+        <tr>
+            <td>{{order.product.name}}</td>
+            <td>{{order.product.price |round(2, 'common')}}</td>
+            <td>{{order.quantity}}</td>
+            <td>{{order.product.available}}</td>
+            <td>{{(order.product.price * order.quantity) |round(2, 'common') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tr>
+        <td></td>
+    </tr>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Estimated Total : </td>
+            <td>$180</td>
+        </tr>
+    </tfoot>
+
+</table>
+{% endblock %}

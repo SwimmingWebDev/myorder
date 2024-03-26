@@ -167,7 +167,7 @@ def update_product(product_id):
     if request.method == 'POST':
         product.name = request.form['name']
         product.price =request.form['price']
-        product.quantity = request.form['quantity']
+        product.available = request.form['available']
         
         db.session.commit()
         return redirect("/products")
@@ -249,43 +249,88 @@ def api_delete_product(product_id):
     return "", 204
 
 
-@app.route("/orders")
+# list orders
+@app.route("/orders", methods=['GET', 'POST'])
 def orders_list():
-    statement = db.select(Order).order_by(Order.id)
+        statement = db.select(Order).order_by(Order.id)
+        records = db.session.execute(statement)
+        results = records.scalars()
+        return render_template("orders.html", orders = results)
+
+# create order
+@app.route("/makeorder", methods=['GET', 'POST'])
+def make_order():
+    if request.method == 'POST':
+        customer_id = request.form['customer']
+        product_id = request.form['item']
+        quantity =  request.form['quantity']
+        
+        order = Order(customer_id=customer_id)
+        product = db.get_or_404(Product, product_id)
+ 
+        if product is not None:
+            new_order = ProductOrder(order=order, product=product, quantity=quantity) 
+            db.session.add(new_order) 
+            db.session.commit()
+            return redirect(url_for("orders_list"))
+        else:
+            return "Product not found"
+    else:
+        statement = db.select(Customer).order_by(Customer.id)
+        records = db.session.execute(statement)
+        customers = records.scalars()
+
+        statement = db.select(Product).order_by(Product.id)
+        records = db.session.execute(statement)
+        products = records.scalars()
+
+        return render_template("make_order.html", customers = customers, products=products)
+
+
+
+@app.route("/order/<int:order_id>")
+def order_details(order_id):
+    statement = db.select(ProductOrder).filter_by(order_id=order_id)
     records = db.session.execute(statement)
     results = records.scalars()
-    return render_template("orders.html", orders = results)
+    
+    return render_template("order_details.html", orders = results, order_id = order_id)
+
+
+@app.route("/order/<int:order_id>/delete", methods=["GET", "POST"])
+def order_delete(order_id):
+    order = db.get_or_404(Order, order_id)
+    db.session.delete(order)
+    db.session.commit()
+    return redirect(url_for("orders_list"))
 
 
 # API view - order
 # create Order   
-
 @app.route("/api/orders", methods=["GET", "POST"])
 def api_create_order():
     if request.method == 'POST':
         data = request.json
-        customer_id = data["customer_id"]
-        items = data["items"]
-        new_order = Order(customer_id=customer_id, items=items)
-        
-        db.session.add(new_order)
-        db.session.commit()
-        return "Created Successfully", 201
-    else:
-        statement = db.select(Order).order_by(Order.id)
-        records = db.session.execute(statement)
-        orders = []
-        for order in records.scalars():
-            json_record = Order.to_json(order)
-            orders.append(json_record)
-        return jsonify(orders)
 
-        # statement = db.select(Order).order_by(Order.id)
-        # records = db.session.execute(statement)
-        # for order in records.scalars():
-        #     json_record = Order.to_json(order)
-        #     orders.append(json_record)
-        # return jsonify(orders)
+        customer_id = data["customer_id"]
+        items = data.get('item', [])
+
+        for item in items:
+            name = item.get("name")
+            quantity = item.get('quantity')
+
+            order = Order(customer_id=customer_id)
+            product = db.get_or_404(Product, name)
+
+            if product is not None:
+                new_order = ProductOrder(order=order, product=product, quantity=quantity) 
+        
+            db.session.add(new_order)
+            db.session.commit()
+
+        return "Created Successfully", 201
+    
+    
 
 # Update Orders
 @app.route("/api/orders/<int:order_id>", methods=["GET", "PUT" "DELETE"])
@@ -320,3 +365,6 @@ if __name__ == "__main__":
 
 #api delete url could not be the same as update url
 #name could not be shown full name
+    
+# records = db.session.execute(db.select(Product).where(Product.id==1))
+# records.scalars().all()

@@ -6,21 +6,28 @@
 <table>
     <thead>
         <tr>
-            <th scope="col" width="90">Order_ID</th>
-            <th scope="col" width="90">Customer_ID</th>
-            <th scope="col" width="90">Customer_Name</th>
-            <th scope="col" width="90">Date_created</th>
+            <th>Order_ID</th>
+            <th>Customer_Name</th>
+            <th>Created</th>
+            <th>Processed</th>
+            <th>Option</th>
 
         </tr>
     </thead>
     <tbody>
         {% for order in orders %}
-        <tr>
+        {% set class_name = "pending" %}
+        {% if order.processed %}
+        {% set class_name = "processed" %}
+        {% endif %}
+
+        <tr class="{{ class_name }}">
             <td><a href="/order/{{order.id}}">{{ order.id }}</a></td>
-            <td>{{ order.customer_id }}</td>
             <td>{{ order.customer.name }}</td>
             <td>{{ order.date_created }}</td>
-
+            <td>{{ order.processed }}</td>
+            <td><a href="/order/{{order.id}}/delete" class="btn {{ class_name }}"
+                    onclick="return confirm('Are you sure to delete?')">Delete</a></td>
         </tr>
         {% endfor %}
     </tbody>

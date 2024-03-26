@@ -129,6 +129,7 @@ input[type="submit"]:hover {
   font-family: "Roboto Condensed", sans-serif;
   background-color: var(--bg-variant);
   color: var(--font-color);
+  padding: 4px 6px;
 }
 
 .custom-select select {
@@ -154,5 +155,18 @@ input[type="submit"]:hover {
 }
 
 .customer_name {
-  margin: 0;
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
+.btn.processed {
+  cursor: not-allowed;
+  pointer-events: none;
+  background-color: var(--bg-variant-dark);
+  color: var(--bg-variant);
+}
+
+.btn.pending {
+  background-color: var(--bg-variant);
+  color: var(--font-color);
 }

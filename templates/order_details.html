@@ -2,11 +2,18 @@
 
 {% block content %}
 <h1>#{{order_id}} Order Details</h1>
-<div class="order_options">
-    <p>Order Status:<span class="order_status">Adjust</span></p><span>|</span><a href="/order/{{order_id}}/delete"
-        class="btn" onclick="return confirm('Are you sure to delete?')">Delete
-        Order</a>
-</div>
+
+
+<form action="/order/process/{{order_id}}" method="POST">
+    <label for="product">Strategy</label>
+    <select name="strategy" class="custom-select">
+        <option value="adjust">adjust</option>
+        <option value="reject">reject</option>
+        <option value="ignore">ignore</option>
+    </select>
+    <input type="submit" value="Process">
+</form>
+
 <table>
     <thead>
         <tr>
@@ -20,7 +27,8 @@
     <tbody>
         {% for order in orders %}
         {% if loop.index == 1 %}
-        <p class="customer_name">Customer Name: {{order.order.customer.name}}</p>
+        <p class="customer_name">Customer : {{order.order.customer.name}}<span> | Balance :
+                ${{order.order.customer.balance |round(2, 'common') }}</span></p>
         {% endif %}
         <tr>
             <td>{{order.product.name}}</td>
@@ -40,7 +48,7 @@
             <td></td>
             <td></td>
             <td>Estimated Total : </td>
-            <td>$180</td>
+            <td>${{ total|round(2, 'common') }}</td>
         </tr>
     </tfoot>
 

@@ -16,10 +16,10 @@
             {% for order in orders %}
             <tr>
                 <td>{{ order.id }}</td>
-                <td>{{ order.date_created }}</td>
+                <td>{{ order.created }}</td>
 
                 <td>
-                    <a href="/order/{{order.id}}" class="btn">Show Details</a>
+                    <a href="/orders/{{order.id}}" class="btn">Show Details</a>
                     <!-- <a href="/order/{{order.id}}" class="btn"
                         onclick="return confirm('Are you sure to delete?')">Delete</a> -->
                 </td>

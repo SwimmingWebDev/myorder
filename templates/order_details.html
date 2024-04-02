@@ -4,14 +4,17 @@
 <h1>#{{order_id}} Order Details</h1>
 
 
-<form action="/order/process/{{order_id}}" method="POST">
+<form action="/orders/process/{{order_id}}" method="POST">
     <label for="product">Strategy</label>
     <select name="strategy" class="custom-select">
+        <option value="adjust">none</option>
         <option value="adjust">adjust</option>
         <option value="reject">reject</option>
         <option value="ignore">ignore</option>
     </select>
+
     <input type="submit" value="Process">
+
 </form>
 
 <table>
@@ -27,7 +30,10 @@
     <tbody>
         {% for order in orders %}
         {% if loop.index == 1 %}
-        <p class="customer_name">Customer : {{order.order.customer.name}}<span> | Balance :
+
+        <p class="customer_name">Customer : <a
+                href="/customers/update/{{order.order.customer.id}}">{{order.order.customer.name}}</a><span>
+                | Balance :
                 ${{order.order.customer.balance |round(2, 'common') }}</span></p>
         {% endif %}
         <tr>

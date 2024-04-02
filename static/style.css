@@ -170,3 +170,10 @@ input[type="submit"]:hover {
   background-color: var(--bg-variant);
   color: var(--font-color);
 }
+
+.items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 19px;
+}

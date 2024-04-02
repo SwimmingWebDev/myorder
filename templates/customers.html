@@ -20,12 +20,12 @@
         <tbody>
             {% for customer in customers %}
             <tr>
-                <td><a href="/customer/{{customer.id}}">{{ customer.name }}</a></td>
+                <td><a href="/customers/{{customer.id}}">{{ customer.name }}</a></td>
                 <td>{{ customer.phone }}</td>
                 <td>{{ customer.balance }}</td>
                 <td>
-                    <a href="/customer/update/{{customer.id}}" class="btn">Edit</a>
-                    <a href="/customer/delete/{{customer.id}}" class="btn"
+                    <a href="/customers/update/{{customer.id}}" class="btn">Edit</a>
+                    <a href="/customers/delete/{{customer.id}}" class="btn"
                         onclick="return confirm('Are you sure to delete?')">Delete</a>
                 </td>
             </tr>

@@ -1,2 +1,4 @@
-/L_flask_1.pdf
-/L_flask_2.pdf
+/guide
+demo.py
+__pycache__
+/__pycache__

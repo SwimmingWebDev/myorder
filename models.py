@@ -31,7 +31,7 @@ class Product(db.Model):
         return {
             "id":self.id,
             "name":self.name,
-            "price": self.price,
+            "price": float(self.price),
             "available": self.available,
         }
 
@@ -41,7 +41,7 @@ class Order(db.Model):
     customer = relationship("Customer", back_populates="orders")
     total = mapped_column(Numeric, nullable=False, default=0)
     items = relationship("ProductOrder", back_populates="order", cascade="all, delete-orphan")
-    date_created = mapped_column(DateTime(timezone=True), default=func.now())
+    created = mapped_column(DateTime(timezone=True), default=func.now())
     processed = mapped_column(DateTime(timezone=True), nullable=True)
     
     def calculate_total(self, list):
@@ -53,41 +53,36 @@ class Order(db.Model):
         return {
             "id":self.id,
             "customer_id":self.customer_id,
-            "date_created": self.date_created,
+            "created": self.created,
             "processed": self.processed,
         }
-
-    # def product_to_dict(self, name, quantity):
-    #     items = []
-    #     item = {
-    #         "name": name,
-    #         "quantity":quantity
-    #     }
-    #     return items.push(item)
         
-    def process(self, strategy):  
-            if self.customer.balance > 0:  
-                self.total = 0 
-                for item in self.items:
-                    if item.quantity > item.product.available:
-                        if strategy == "ignore":
-                            item.quantity = 0
-                            return False
-                        elif strategy == "reject":
-                            return False, "Insufficient Quantity"
-                        else:
-                            item.quantity = item.product.available    
-                    item.product.available -= item.quantity
-                    sub_total = 0   
-                    sub_total += (float(item.product.price) * float(item.quantity))
-                    if sub_total > self.customer.balance:
-                        return False, "Insufficient Balance"
-                    self.total += sub_total
-                self.customer.balance = float(self.customer.balance)
-                self.customer.balance -= self.total
-                print(self.total)
-                self.processed = func.now()
-                return True
+    def process(self, strategy = "adjust"):  
+            if self.processed is None:
+                if self.customer.balance > 0:  
+                    self.total = 0 
+                    for item in self.items:
+                        if item.quantity > item.product.available:
+                            if strategy == "ignore":
+                                item.quantity = 0
+                                return "Quantity is set to 0", False
+                            elif strategy == "reject":
+                                return "Insufficient Quantity", False
+                            elif strategy == "adjust":
+                                item.quantity = item.product.available    
+                        item.product.available -= item.quantity
+                        sub_total = 0   
+                        sub_total += (float(item.product.price) * float(item.quantity))
+                        if sub_total > self.customer.balance:
+                            return "Insufficient Balance", False
+                        self.total += sub_total
+                    self.customer.balance = float(self.customer.balance)
+                    self.customer.balance -= self.total
+                    print(self.total)
+                    self.processed = func.now()
+                    return True
+            else:
+                return "Invalid Value", 400
 
 
 class ProductOrder(db.Model):

@@ -1,9 +1,18 @@
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for, redirect, request
 from pathlib import Path
 from db import db
 
 from routes import api_customers_bp, api_products_bp, api_orders_bp
 from routes import customers_bp, products_bp, orders_bp
+
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+
 
 app = Flask(__name__)
 
@@ -27,6 +36,8 @@ def home():
 app.register_blueprint(customers_bp, url_prefix="/customers")
 app.register_blueprint(products_bp, url_prefix="/products")
 app.register_blueprint(orders_bp, url_prefix="/orders")
+
+
 
 
 if __name__ == "__main__":

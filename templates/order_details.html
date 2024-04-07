@@ -37,7 +37,7 @@
                 ${{order.order.customer.balance |round(2, 'common') }}</span></p>
         {% endif %}
         <tr>
-            <td>{{order.product.name}}</td>
+            <td><a href="/products/{{order.product.id}}">{{order.product.name}}</a></td>
             <td>{{order.product.price |round(2, 'common')}}</td>
             <td>{{order.quantity}}</td>
             <td>{{order.product.available}}</td>

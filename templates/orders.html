@@ -10,6 +10,7 @@
             <th>Customer_Name</th>
             <th>Created</th>
             <th>Processed</th>
+            <th>Status</th>
             <th>Option</th>
 
         </tr>
@@ -21,11 +22,17 @@
         {% set class_name = "processed" %}
         {% endif %}
 
-        <tr class="{{ class_name }}">
+        <tr>
             <td><a href="/orders/{{order.id}}">{{ order.id }}</a></td>
             <td>{{ order.customer.name }}</td>
             <td>{{ order.created }}</td>
             <td>{{ order.processed }}</td>
+            <td class="{{ class_name }}">
+                {% if class_name == "processed" %}
+                Done
+                {% else %}
+                {{ strategy }}
+                {% endif %}</td>
             <td><a href="/orders/{{order.id}}/delete" class="btn {{ class_name }}"
                     onclick="return confirm('Are you sure to delete?')">Delete</a></td>
         </tr>

@@ -11,7 +11,7 @@ def orders_list():
         statement = db.select(Order).order_by(Order.id)
         records = db.session.execute(statement)
         results = records.scalars()
-        return render_template("orders.html", orders = results)
+        return render_template("orders.html", orders = results, strategy="pending")
 
 # create order
 @orders_bp.route("/new", methods=['GET', 'POST'])
@@ -68,9 +68,9 @@ def order_details(order_id):
 def process_order(order_id):
     order= db.get_or_404(Order, order_id)
     strategy = request.form['strategy']
-    Order.process(order, strategy)
+    Order.process(order, strategy)      
     db.session.commit()
-    return redirect(url_for("orders.orders_list"))
+    return redirect(url_for("orders.orders_list", strategy = strategy))
     
 # delete order
 @orders_bp.route("/<int:order_id>/delete", methods=["GET", "POST"])

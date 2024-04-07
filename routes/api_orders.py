@@ -48,11 +48,11 @@ def api_process_order(order_id):
     data = request.json
 
     if data["process"] == True:
-        if data["strategy"]:
+        if "strategy" in data:
             Order.process(order, data["strategy"])
             db.session.commit()    
         else:
-            data["strategy"]="adjust"
+            data["strategy"] = None
             Order.process(order, data["strategy"])
             db.session.commit() 
         return "", 204

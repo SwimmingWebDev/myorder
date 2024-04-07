@@ -2,6 +2,8 @@ from sqlalchemy import Boolean, Float, DateTime, Numeric, ForeignKey, Integer, S
 from sqlalchemy.orm import mapped_column, relationship
 from db import db
 from sqlalchemy.sql import func
+from datetime import datetime
+
 
 class Customer(db.Model):
     id = mapped_column(Integer, primary_key=True)
@@ -41,7 +43,7 @@ class Order(db.Model):
     customer = relationship("Customer", back_populates="orders")
     total = mapped_column(Numeric, nullable=False, default=0)
     items = relationship("ProductOrder", back_populates="order", cascade="all, delete-orphan")
-    created = mapped_column(DateTime(timezone=True), default=func.now())
+    created = mapped_column(DateTime(timezone=True), default=datetime.now().replace(microsecond=0))
     processed = mapped_column(DateTime(timezone=True), nullable=True)
     
     def calculate_total(self, list):
@@ -57,7 +59,7 @@ class Order(db.Model):
             "processed": self.processed,
         }
         
-    def process(self, strategy = "adjust"):  
+    def process(self, strategy):  
             if self.processed is None:
                 if self.customer.balance > 0:  
                     self.total = 0 
@@ -65,10 +67,10 @@ class Order(db.Model):
                         if item.quantity > item.product.available:
                             if strategy == "ignore":
                                 item.quantity = 0
-                                return "Quantity is set to 0", False
                             elif strategy == "reject":
                                 return "Insufficient Quantity", False
-                            elif strategy == "adjust":
+                            else:
+                                strategy = "adjust"
                                 item.quantity = item.product.available    
                         item.product.available -= item.quantity
                         sub_total = 0   
@@ -78,7 +80,6 @@ class Order(db.Model):
                         self.total += sub_total
                     self.customer.balance = float(self.customer.balance)
                     self.customer.balance -= self.total
-                    print(self.total)
                     self.processed = func.now()
                     return True
             else:
